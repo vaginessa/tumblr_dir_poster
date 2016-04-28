@@ -13,13 +13,14 @@ function init(consumerKey, consumerSecret, token, tokenSecret) {
 }
 function checkInited() {
   if (!inited) {
-    throw `Module not initialised, please call .init() with setup info first`
+    log.error(`Module not initialised, please call .init() with setup info first`)
+    throw `Not initialised`
   }
 }
 
 function processDir(directory) {
 
-  checkInited()
+  try {checkInited()} catch (e) {process.exit(1)}
 
   log(`Processing directory ${directory}...`)
 
@@ -40,7 +41,7 @@ function processDir(directory) {
 
 function processDataFile(dataFilePath) {
 
-  checkInited()
+  try {checkInited()} catch (e) {process.exit(1)}
 
   log(`Processing data file ${dataFilePath}...`)
 
