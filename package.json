@@ -1,0 +1,26 @@
+{
+  "name": "tumblr_dir_poster",
+  "version": "1.0.0",
+  "description": "Monitor a directory for data to post to Tumblr.",
+  "main": "poster.js",
+  "bin": "./cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tumblr",
+    "api",
+    "poster",
+    "post",
+    "automate",
+    "bot"
+  ],
+  "author": "Jack Preston <unwttng@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "argparse": "^1.0.7",
+    "colors": "^1.1.2",
+    "lodash": "^4.11.1",
+    "tumblr.js": "0.0.7"
+  }
+}
