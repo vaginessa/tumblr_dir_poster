@@ -30,10 +30,10 @@ function processDir(directory) {
     name => path.join(directory, name)
   )
   log(`Processing ${dataPaths.length} data files...`)
-  for (dataPath of dataPaths) {log.debug(dataPath)}
+  for (let dataPath of dataPaths) {log.debug(dataPath)}
 
   // Process each one
-  for (dataPath of dataPaths) {
+  for (let dataPath of dataPaths) {
     processDataFile(dataPath)
   }
 
@@ -83,16 +83,20 @@ function processDataFile(dataFilePath) {
   .then(tumblrResp => {
 
     // Delete stuff if necessary
-    if (data.deleteAfterPosting === true) {
-      log(`data.deleteAfterPosting is set, so deleting data and content files...`)
-      if (!!data.img) {
-        log.debug(`Deleting content file ${data.img}...`)
-        fs.unlinkSync(data.img)
-      }
-      log.debug(`Deleting data file ${dataFilePath}...`)
-      fs.unlinkSync(dataFilePath)
+    if (data.deleteDataFileAfterPosting === true) {
+      log(`data.deleteDataFileAfterPosting is set, so deleting data file ${data.dataFilePath}...`)
+      try {fs.unlinkSync(dataFilePath)}
+      catch (e) {log.error(`Failed to delete data file ${data.dataFilePath}: ${e}${!!e.stack ? ': ' + e.stack : ''}`)}
     } else {
-      log.debug(`Not requested to delete, so not deleting`)
+      log.debug(`Not deleting data file: set data.deleteDataFileAfterPosting to do this`)
+    }
+
+    if (!!data.img && data.deleteContentFilesAfterPosting === true) {
+      log(`data.deleteContentFilesAfterPosting is set, so deleting img file ${data.img}...`)
+      try {fs.unlinkSync(dataFilePath)}
+      catch (e) {log.error(`Failed to delete img file ${data.img}: ${e}${!!e.stack ? ': ' + e.stack : ''}`)}
+    } else {
+      log.debug(`Not deleting img file: set data.deleteContentFilesAfterPosting to do this`)
     }
 
   })
