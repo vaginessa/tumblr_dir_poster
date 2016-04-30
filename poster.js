@@ -46,6 +46,7 @@ function processDataFile(dataFilePath) {
   log(`Processing data file ${dataFilePath}...`)
 
   let data = null
+  let originalData = null
 
   return (new Promise((resolve, reject) => {
 
@@ -56,8 +57,18 @@ function processDataFile(dataFilePath) {
       return reject(`Failed to parse data file ${dataFilePath}: ${e.stack}`)
     }
     log.debug(`Parsed: ${JSON.stringify(data)}`)
+    originalData = JSON.parse(JSON.stringify(data))
 
     return resolve()
+
+  })
+  .then(() => {
+
+    // Leave alone if processed before
+    if (data.processed) {
+      log(`Data file processed previously, so not processing again. Finished!`)
+      throw `PROCESSED`
+    }
 
   })
   .then(() => {
@@ -89,6 +100,9 @@ function processDataFile(dataFilePath) {
       catch (e) {log.error(`Failed to delete data file ${data.dataFilePath}: ${e}${!!e.stack ? ': ' + e.stack : ''}`)}
     } else {
       log.debug(`Not deleting data file: set data.deleteDataFileAfterPosting to do this`)
+      log.debug(`Adding "processed": true to the data file since we're not removing it`)
+      originalData.processed = true
+      fs.writeFileSync(data.dataFilePath, JSON.stringify(originalData, undefined, 2))
     }
 
     if (!!data.img && data.deleteContentFilesAfterPosting === true) {
@@ -101,6 +115,7 @@ function processDataFile(dataFilePath) {
 
   })
   .catch(err => {
+    if (err === `PROCESSED`) {return}
     log.error(`Error processing data file ${dataFilePath}: ${err}${!!err.stack ? ': ' + err.stack : ''}`)
   }))
 
