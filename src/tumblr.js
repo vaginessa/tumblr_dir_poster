@@ -28,6 +28,7 @@ function post(data) {
 
   switch (data.type) {
     case `photo`: return postPhoto(data)
+    case `text`: return postText(data)
     default: throw `Unsupported post type ${data.type}: this shouldn't have got through validation...`
   }
 
@@ -43,6 +44,23 @@ function postPhoto(data) {
       tags: (data.tags || []).join(`,`),
       caption: data.caption || ``,
       data: data.img,
+    }, postResponseHandler(resolve, reject))
+
+  }))
+
+}
+
+function postText(data) {
+  log(`Posting text to Tumblr:${data.blog}...`)
+
+  return (new Promise((resolve, reject) => {
+
+    t.text(data.blog, {
+      state: data.state || `published`,
+      tags: (data.tags || []).join(`,`),
+      caption: data.caption || ``,
+      title: data.title || ``,
+      body: data.text || ``,
     }, postResponseHandler(resolve, reject))
 
   }))

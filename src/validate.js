@@ -17,7 +17,7 @@ const REQUIRED_FIELDS_FOR_TYPES = {
   caption: [`photo`, `audio`, `video`],
   img: [`photo`],
 }
-const SUPPORTED_POST_TYPES = [`photo`]
+const SUPPORTED_POST_TYPES = [`photo`, `text`]
 
 const ALL_POST_STATES = [`published`, `draft`, `queue`, `private`]
 
